@@ -5,7 +5,16 @@ import (
 	"os"
 	"time"
 )
-
+/**
+ *  Modbus Read
+ *
+ *  * parameters
+ *   int        fd:  file descripter for serial device
+ *   uint8_t  addr:  slave device address
+ *   uint16_t sr:    starting register number
+ *   uint16_t nr:    number of registers to read or write
+ *   uint8_t data[]: memory area for read data -- the size of footprint must be nr*2
+ */
 func ModbusRead(fd *os.File, addr byte, sr, nr uint16, data []byte) ([]byte, error) {
 	//Preparation for Sending a Packet
 	var send_packet = make([]byte, 8)
@@ -61,6 +70,16 @@ func ModbusRead(fd *os.File, addr byte, sr, nr uint16, data []byte) ([]byte, err
 	return recv_packet[3 : l+3], nil
 }
 
+/**
+ *  Modbus Write
+ *
+ *  * parameters
+ *   int        fd:  file descripter for serial device
+ *   uint8_t  addr:  slave device address
+ *   uint16_t sr:    starting register number
+ *   uint16_t nr:    number of registers to write
+ *   uint8_t data[]: memory area for writing data -- the size of footprint must be nr*2
+ */
 func ModbusWrite(fd *os.File, addr byte, sr, nr uint16, data []byte) error {
 	var send_packet = make([]byte, 256)
 
