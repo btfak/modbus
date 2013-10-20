@@ -6,11 +6,12 @@ import (
 	"strconv"
 )
 
-var _handler func(req []byte) (res []byte)
+var _server func(req []byte) (res []byte)
+var _fault func(detail string)
 
 type Handler interface {
-	Server(req []byte)(res []byte)
-	
+	Server(req []byte) (res []byte)
+	Fault(detail string)
 }
 
 type MbTcp struct {
@@ -58,8 +59,9 @@ func send(a string, d []byte) ([]byte, error) {
 	return []byte{}, err
 }
 
-func SetHandler(h func(req []byte) (res []byte)) {
-	_handler = h
+func SetHandler(h Handler) {
+	_server = h.Server
+	_fault = h.Fault
 }
 
 func ServerCreate(port int) error {
@@ -67,6 +69,7 @@ func ServerCreate(port int) error {
 	ln, err := net.Listen("tcp", ":"+p)
 	if err != nil {
 		return err
+		_fault(err.Error())
 	}
 	for {
 		conn, err := ln.Accept()
@@ -81,8 +84,12 @@ func ServerCreate(port int) error {
 func handle(c net.Conn) {
 	req, err := ioutil.ReadAll(c)
 	if err != nil {
+		_fault(err.Error())
 		return
 	}
-	res := _handler(req)
-	c.Write(res)
+	res := _server(req)
+	_, err = c.Write(res)
+	if err != nil {
+		_fault(err.Error())
+	}
 }

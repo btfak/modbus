@@ -6,25 +6,11 @@
 package main
 
 import (
-	"log"
-	"modbusrtu"
-	"os"
+	"app"
 )
 
 func main() {
-	fd, err := os.Open("/dev/ttyAM0")
-	if err != nil {
-		log.Println("unable to open rs485")
-		return
-	}
-	b, err := modbusrtu.Read(fd, 0x03,1, 3, 1)
-	if err != nil {
-		log.Println(err.Error())
-		return
-	}
-	log.Println(b)
-	err = modbusrtu.Write(fd, 0x03,1, 3, 1, []byte{0, 1})
-	if err != nil {
-		log.Println(err.Error())
-	}
+	app.RtuClient()
+	app.TcpClient()
+	app.TcpServer()
 }
