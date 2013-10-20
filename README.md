@@ -1,10 +1,9 @@
-modbus RTU
+ModBus
 ======
-### a implementation of modbus RTU with golang
-- Client only
-- Crc check auto
-- Easy use
-
+### a implementation of ModBus Protocol with golang
+- ModBus RTU and Modbus TCP implementation
+- ModBus RTU Crc check auto
+- ModBus TCP client and server
 
 ##### More? 
 [My Blog](http://www.lubia.me)
