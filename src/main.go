@@ -7,7 +7,7 @@ package main
 
 import (
 	"log"
-	"modbus"
+	"modbusrtu"
 	"os"
 )
 
@@ -17,13 +17,13 @@ func main() {
 		log.Println("unable to open rs485")
 		return
 	}
-	b, err := modbus.ModbusRead(fd, 1, 3, 1)
+	b, err := modbusrtu.Read(fd, 0x03,1, 3, 1)
 	if err != nil {
 		log.Println(err.Error())
 		return
 	}
 	log.Println(b)
-	err = modbus.ModbusWrite(fd, 1, 3, 1, []byte{0, 1})
+	err = modbusrtu.Write(fd, 0x03,1, 3, 1, []byte{0, 1})
 	if err != nil {
 		log.Println(err.Error())
 	}
